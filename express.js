@@ -21,11 +21,15 @@ app.use(
 
 const keyFilePath = path.join(__dirname, "service-account-key.json");
 
-if (import.meta.env.GOOGLE_CLOUD_KEY) {
+if (process.env.GOOGLE_CLOUD_KEY) {
   fs.writeFileSync(
     keyFilePath,
-    Buffer.from(`${import.meta.env.GOOGLE_CLOUD_KEY}`, "base64")
+    Buffer.from(process.env.GOOGLE_CLOUD_KEY, "base64")
   );
+}
+if (!process.env.GOOGLE_CLOUD_KEY) {
+  console.error("Missing GOOGLE_CLOUD_KEY environment variable.");
+  process.exit(1);
 }
 
 const client = new vision.ImageAnnotatorClient({
@@ -33,6 +37,11 @@ const client = new vision.ImageAnnotatorClient({
 });
 
 app.post("/detect-mood", async (req, res) => {
+  const uploadDir = path.join(__dirname, "../uploads");
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+
   const form = formidable({
     uploadDir: path.join(__dirname, "../uploads"),
     keepExtensions: true,
