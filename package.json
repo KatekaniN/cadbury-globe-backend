@@ -2,6 +2,7 @@
   "name": "cadbury-globe-backend",
   "version": "1.0.0",
   "main": "express.js",
+  "type": "module",
   "scripts": {
     "build": "echo 'No build step required for backend'",
     "dev": "nodemon server.js",
