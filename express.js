@@ -5,9 +5,6 @@ import path from "path";
 import vision from "@google-cloud/vision";
 import { fileURLToPath } from "url";
 import cors from "cors";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,10 +21,10 @@ app.use(
 
 const keyFilePath = path.join(__dirname, "service-account-key.json");
 
-if (process.env.GOOGLE_CLOUD_KEY) {
+if (import.meta.env.GOOGLE_CLOUD_KEY) {
   fs.writeFileSync(
     keyFilePath,
-    Buffer.from(process.env.GOOGLE_CLOUD_KEY, "base64")
+    Buffer.from(`${import.meta.env.GOOGLE_CLOUD_KEY}`, "base64")
   );
 }
 
